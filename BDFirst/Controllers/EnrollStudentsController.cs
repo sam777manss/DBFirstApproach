@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDFirst.Context;
 using BDFirst.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BDFirst.Controllers
 {
@@ -20,6 +21,7 @@ namespace BDFirst.Controllers
         }
 
         // GET: EnrollStudents
+        [Authorize]
         public async Task<IActionResult> Index()
         {
             return _context.Students != null ?
