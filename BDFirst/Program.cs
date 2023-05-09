@@ -1,5 +1,10 @@
 using BDFirst.Context;
 
+/// email sender start
+using Microsoft.AspNetCore.Identity.UI.Services;
+using BDFirst.Services;
+/// email sender end
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -50,6 +55,20 @@ builder.Services.ConfigureApplicationCookie(options =>
 // user management end
 
 builder.Services.AddControllersWithViews();
+
+// email sender start
+builder.Services.AddTransient<IEmailSender, EmailSender>();
+builder.Services.Configure<AuthMessageSenderOptions>(builder.Configuration);
+
+builder.Services.ConfigureApplicationCookie(o => {
+    o.ExpireTimeSpan = TimeSpan.FromDays(5);
+    o.SlidingExpiration = true;
+});
+
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(o =>
+       o.TokenLifespan = TimeSpan.FromHours(3));    
+// email sender ends
 
 var app = builder.Build();
 
