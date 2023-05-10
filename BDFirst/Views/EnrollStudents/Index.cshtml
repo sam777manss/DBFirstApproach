@@ -10,6 +10,9 @@
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Index</title>
+    <!-- izi toast-->
+    <script src="~/js/izitoast.min.js"></script>
+    <link href="~/css/izitoast.min.css" rel="stylesheet" />
 </head>
 <body>
 <p>
@@ -39,11 +42,81 @@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.EnrollId">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.EnrollId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.EnrollId">Delete</a>
+                <a asp-action="Delete" asp-route-id="@item.EnrollId">Delete</a>  |
+                <!-- Button trigger modal -->
+                <a type="button" class="" data-toggle="modal" data-target=#@item.EnrollId>
+                    Add Course Details
+                </a>
             </td>
         </tr>
+
+                <!-- Modal -->
+                <div class="modal fade" id="@item.EnrollId" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel">Add Course Details</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                            <div class="modal-body">
+@*                                <div class="form-group">
+                                    <label for="Name" class="control-label">Course Name</label>
+                                    <input id="Name" class="form-control" placeholder="Course Name" />
+                                    <span class="text-danger"></span>
+                                </div>*@
+                                <div class="dropdown">
+                                    <button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Course Name
+                                    </button>
+                                    <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+                                        <button class="dropdown-item" type="button" value="B.Tech" onclick="setDropdownValue(this)">B.Tech</button>
+                                        <button class="dropdown-item" type="button" value="M.Tech" onclick="setDropdownValue(this)">M.Tech</button>
+                                        <button class="dropdown-item" type="button" value="Pharma" onclick="setDropdownValue(this)">Pharma</button>
+                                        <button class="dropdown-item" type="button" value="BCA"    onclick="setDropdownValue(this)">BCA</button>
+                                        <button class="dropdown-item" type="button" value="Course Name" onclick="setDropdownValue(this)">Course Name</button>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                                <button type="button" data-dismiss="modal" class="btn btn-primary" onclick="AddCourse(@item.EnrollId)">Save changes</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 }
     </tbody>
 </table>
 </body>
+<script>
+    function setDropdownValue(button) {
+        debugger
+        // Get the dropdown button and set its text to the value of the clicked button
+        var dropdownButton = document.getElementById('dropdownMenu2');
+        dropdownButton.innerHTML = button.value;
+    }
+
+    function AddCourse(EnrollId) {
+        var course = $('#dropdownMenu2').html();
+        debugger
+        $.ajax({
+            url: '@Url.Action("SaveCourse", "Course")',
+            type: "POST",
+            data: { enroll: EnrollId, courseType: course },
+            success: function (result) {
+                if (result = true) {
+                    iziToast.success({
+                        timeout: 10000,
+                        title: 'Hey',
+                        message: "Saved"
+                    });
+                }
+
+            }
+        });
+    }
+</script>
 </html>
